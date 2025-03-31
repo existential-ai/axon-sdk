@@ -5,6 +5,7 @@ from helpers import flatten_nested_list
 import uuid
 
 from typing import Optional
+import random
 
 
 class AbstractNeuron:
@@ -97,10 +98,8 @@ class AbstractNeuron:
 class ExplicitNeuron(AbstractNeuron):
     def __init__(self, Vt:float, tm:float, tf:float, Vreset:float=0, neuron_id:Optional[str]=None):
         super().__init__(Vt, tm, tf, Vreset)
-        self.id = neuron_id
         self.spike_times:list[float] = []
         self.out_synapses:list[Synapse] = []
-        
         if not neuron_id:
             vowel = ['a', 'e', 'i', 'o', 'u']
             consonant = [

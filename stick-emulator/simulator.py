@@ -1,4 +1,6 @@
+import os
 from primitives import SpikingNetworkModule, DataEncoder, SpikeEventQueue, SpikeEvent, ExplicitNeuron
+from visualizer import Visualizer
 
 
 class Simulator:
@@ -6,7 +8,7 @@ class Simulator:
         self.net = net
         self.event_queue = SpikeEventQueue()
         self.spike_log:dict[str, list[float]] = {}
-        self.voltage_log:dict[ExplicitNeuron, list[float]] = {}
+        self.voltage_log:dict[str, list[float]] = {}
         self.encoder = encoder
         self.dt = dt
 
@@ -24,8 +26,10 @@ class Simulator:
             self.event_queue.add_event(time=synapse.delay+t, neuron=synapse.post_neuron, synapse_type=synapse.type, weight=synapse.weight)
 
     def simulate(self, simulation_time:float):
-        self.timesteps = [i * self.dt for i in range(1, int(simulation_time / self.dt))]
-        for t in self.timesteps:
+        for neuron in self.net.neurons:
+            self.log_voltage(neuron=neuron, V=neuron.V)
+        self.timesteps = [i * self.dt for i in range(int(simulation_time / self.dt))]
+        for t in self.timesteps[1:]:
             events = self.event_queue.pop_events(t)
             for event in events:
                 event.affected_neuron.receive_synaptic_event(event.synapse_type, event.weight)
@@ -39,6 +43,10 @@ class Simulator:
                     for synapse in neuron.out_synapses:
                         self.event_queue.add_event(time=t+synapse.delay, neuron=synapse.post_neuron, synapse_type=synapse.type, weight=synapse.weight)
 
+        if os.getenv("VIZ", "0") == "1":
+            self.launch_visualization()
+
+
     def log_spike(self, neuron:ExplicitNeuron, t:float) -> None:
         if neuron.uid in self.spike_log:
             self.spike_log[neuron.uid].append(t)
@@ -51,5 +59,7 @@ class Simulator:
         else:
             self.voltage_log[neuron.uid] = [V]
 
-    def visualize_dynamics(self):
-        print('vis')
+    def launch_visualization(self):
+        print('Launching visualization...')
+        vis = Visualizer(self.timesteps, self.spike_log, self.voltage_log, Vt=10, dt=self.dt)
+        vis.run()
