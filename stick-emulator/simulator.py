@@ -61,5 +61,14 @@ class Simulator:
 
     def launch_visualization(self):
         print('Launching visualization...')
-        vis = Visualizer(self.timesteps, self.spike_log, self.voltage_log, Vt=10, dt=self.dt)
+        voltage_log_with_id = {}
+        spike_log_with_id = {}
+        it = 0
+        for neuron in self.net.neurons:
+            new_id = f"{it:02}_" + neuron.id
+            voltage_log_with_id[new_id] = self.voltage_log[neuron.uid]
+            spike_log_with_id[new_id] = self.spike_log[neuron.uid]
+            it += 1
+
+        vis = Visualizer(self.timesteps, spike_log_with_id, voltage_log_with_id, Vt=10, dt=self.dt)
         vis.run()

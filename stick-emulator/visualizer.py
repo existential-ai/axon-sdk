@@ -12,7 +12,7 @@ class Visualizer:
         self.voltage_log = self.subsample(voltage_log, dt)
         self.Vt = Vt
         self.app = dash.Dash(__name__)
-        self.setup_logging()
+        # self.setup_logging()
         self.setup_layout()
         self.setup_callbacks()
 
@@ -32,7 +32,7 @@ class Visualizer:
                 dcc.Checklist(
                     id='checklist',
                     options=[{'label': item, 'value': item} for item in self.voltage_log.keys()],
-                    value=list(self.voltage_log.keys()),  # Default: all items checked
+                    value=[it for it in list(self.voltage_log.keys())],  # Default: all items checked
                     inline=True
                 ),
             ]),
@@ -55,8 +55,6 @@ class Visualizer:
             fig = make_subplots(rows=len(selected_items), cols=1, shared_xaxes=True, vertical_spacing=0)
 
             for i, item in enumerate(selected_items):
-                
-
                 fig.add_trace(go.Scatter(
                         x=self.timesteps,
                         y=self.voltage_log[item],
@@ -94,7 +92,6 @@ class Visualizer:
                         )
 
             fig.update_layout(
-                title='Time Series Data',
                 template='plotly_white',
                 margin=dict(l=20, r=20, t=40, b=20),
                 height=150 * len(selected_items),
