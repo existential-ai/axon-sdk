@@ -65,7 +65,7 @@ class Simulator:
         spike_log_with_id = {}
         it = 0
         for neuron in self.net.neurons:
-            new_id = f"{it:02}_" + neuron.id
+            new_id = f"{it:02}_" + neuron.uid
             voltage_log_with_id[new_id] = self.voltage_log[neuron.uid]
             spike_log_with_id[new_id] = self.spike_log[neuron.uid]
             it += 1

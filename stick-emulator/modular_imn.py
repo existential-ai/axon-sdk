@@ -1,8 +1,9 @@
 from primitives import SpikingNetworkModule, DataEncoder, ExplicitNeuron
+from typing import Optional
 
 class InvertingMemoryNetwork(SpikingNetworkModule):
-    def __init__(self, encoder:DataEncoder) -> None:
-        super().__init__()
+    def __init__(self, encoder: DataEncoder, name: Optional[str] = None) -> None:
+        super().__init__(name)
 
         Vt = 10.0
         tm = 100.0
@@ -15,13 +16,12 @@ class InvertingMemoryNetwork(SpikingNetworkModule):
         Tmin = encoder.Tmin
         Tneu = 0.01
 
-        inp = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, neuron_id='input')
-        first = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, neuron_id='first')
-        last = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, neuron_id='last')
-        acc = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, neuron_id='acc')
-        recall = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, neuron_id='recall')
-        output = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, neuron_id='output')
-
+        inp = self.add_neuron(Vt=Vt, tm=tm, tf=tf, neuron_name='input')
+        first = self.add_neuron(Vt=Vt, tm=tm, tf=tf, neuron_name='first')
+        last = self.add_neuron(Vt=Vt, tm=tm, tf=tf, neuron_name='last')
+        acc = self.add_neuron(Vt=Vt, tm=tm, tf=tf, neuron_name='acc')
+        recall = self.add_neuron(Vt=Vt, tm=tm, tf=tf, neuron_name='recall')
+        output = self.add_neuron(Vt=Vt, tm=tm, tf=tf, neuron_name='output')
 
         self.connect_neurons(inp, first, 'V', we, Tsyn)
         self.connect_neurons(inp, last, 'V', 0.5 * we, Tsyn)
@@ -32,7 +32,6 @@ class InvertingMemoryNetwork(SpikingNetworkModule):
         self.connect_neurons(acc, output, 'V', we, Tsyn)
         self.connect_neurons(recall, output, 'V', we, 2 * Tsyn + Tneu)
 
-        self.add_neurons([inp, first, last, acc, recall, output])
 
         self.inp = inp
         self.output = output

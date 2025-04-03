@@ -2,14 +2,15 @@ from abc import ABC, abstractmethod
 from collections import defaultdict
 import heapq
 from helpers import flatten_nested_list
-import uuid
 
 from typing import Optional
 import random
 
 
 class AbstractNeuron:
-    def __init__(self, Vt, tm, tf, Vreset=0):
+    _neuron_count = 0
+
+    def __init__(self, Vt, tm, tf, Vreset=0, name: Optional[str] = None) -> None:
         """
         Initialize the neuron with given parameters.
 
@@ -29,6 +30,9 @@ class AbstractNeuron:
         self.ge = 0.0
         self.gf = 0.0
         self.gate = 0
+
+        self.uid = f"{name if name else ""}(neu_{AbstractNeuron._neuron_count})"  # Unique
+        AbstractNeuron._neuron_count += 1
 
     def update(self, dt) -> bool:
         """
@@ -96,21 +100,10 @@ class AbstractNeuron:
 
 
 class ExplicitNeuron(AbstractNeuron):
-    def __init__(self, Vt:float, tm:float, tf:float, Vreset:float=0, neuron_id:Optional[str]=None):
-        super().__init__(Vt, tm, tf, Vreset)
+    def __init__(self, Vt:float, tm:float, tf:float, Vreset:float=0, neuron_name:Optional[str]=None):
+        super().__init__(Vt, tm, tf, Vreset, name=neuron_name)
         self.spike_times:list[float] = []
         self.out_synapses:list[Synapse] = []
-        if not neuron_id:
-            vowel = ['a', 'e', 'i', 'o', 'u']
-            consonant = [
-                'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 
-                'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'
-            ]
-            choose = lambda x: random.choice(x)
-            neuron_id = f"{choose(consonant) + choose(vowel) + choose(consonant) + choose(vowel)} (random name)"
-            self.id = neuron_id
-        self.id = neuron_id
-        self.uid = uuid.uuid4()
 
     def reset(self):
         self.V = self.Vreset
@@ -161,9 +154,13 @@ class DataEncoder:
     
 
 class SpikingNetworkModule():
-    def __init__(self) -> None:
+    _module_count = 0
+
+    def __init__(self, name: Optional[str] = None) -> None:
         self._neurons:list[ExplicitNeuron] = []
         self._subnetworks:list[SpikingNetworkModule] = []
+        self.uid = f"{name if name else ""}(net_{SpikingNetworkModule._module_count})"  # Unique
+        SpikingNetworkModule._module_count += 1
 
     @property
     def neurons(self) -> list[ExplicitNeuron]:
@@ -173,17 +170,10 @@ class SpikingNetworkModule():
         total_neurons.extend(sub_neurons)
         return total_neurons
 
-    @neurons.setter
-    def neurons(self, new_neurons:list[ExplicitNeuron]) -> None:
-        self._neurons = new_neurons
-
-    def add_neurons(self, neurons:ExplicitNeuron|list[ExplicitNeuron]) -> None:
-        if isinstance(neurons, ExplicitNeuron):
-            self._neurons.append(neurons)
-        elif isinstance(neurons, list) and all(isinstance(n, ExplicitNeuron) for n in neurons):
-            self._neurons.extend(neurons)
-        else:
-            raise TypeError("All elements in the list must be of type ExplicitNeuron")
+    def add_neuron(self, Vt:float, tm:float, tf:float, Vreset:float=0, neuron_name:Optional[str] = None) -> ExplicitNeuron:
+        neuron = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, Vreset=Vreset, neuron_name=f"{self.uid}_{neuron_name if neuron_name else ""}")
+        self._neurons.append(neuron)
+        return neuron
 
     def add_subnetwork(self, subnet:'SpikingNetworkModule') -> None:
         self._subnetworks.append(subnet)

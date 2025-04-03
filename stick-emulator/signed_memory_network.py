@@ -14,27 +14,18 @@ class SignedMemoryNetwork(SpikingNetworkModule):
         Tsyn = 1.0
 
         # Main neurons
-        input_pos = ExplicitNeuron(Vt, tm, tf, neuron_id='input+')
-        input_neg = ExplicitNeuron(Vt, tm, tf, neuron_id='input-')
-        ready_pos = ExplicitNeuron(Vt, tm, tf, neuron_id='ready+')
-        ready_neg = ExplicitNeuron(Vt, tm, tf, neuron_id='ready-')
-        recall = ExplicitNeuron(Vt, tm, tf, neuron_id='recall')
-        output_pos = ExplicitNeuron(Vt, tm, tf, neuron_id='output+')
-        output_neg = ExplicitNeuron(Vt, tm, tf, neuron_id='output-')
-        ready_out = ExplicitNeuron(Vt, tm, tf, neuron_id='ready')
+        input_pos = self.add_neuron(Vt, tm, tf, neuron_name='input+')
+        input_neg = self.add_neuron(Vt, tm, tf, neuron_name='input-')
+        ready_pos = self.add_neuron(Vt, tm, tf, neuron_name='ready+')
+        ready_neg = self.add_neuron(Vt, tm, tf, neuron_name='ready-')
+        recall = self.add_neuron(Vt, tm, tf, neuron_name='recall')
+        output_pos = self.add_neuron(Vt, tm, tf, neuron_name='output+')
+        output_neg = self.add_neuron(Vt, tm, tf, neuron_name='output-')
+        ready_out = self.add_neuron(Vt, tm, tf, neuron_name='ready')
 
         # Internal memory block
         self.mem = MemoryNetwork(encoder)
         self.add_subnetwork(self.mem)
-
-
-        # Add all external neurons
-        self.add_neurons([
-            input_pos, input_neg,
-            ready_pos, ready_neg,
-            recall, output_pos, output_neg,
-            ready_out
-        ])
 
         # === Connections from inputs to ready
         self.connect_neurons(input_pos, ready_pos, 'V', we, Tsyn)

@@ -16,14 +16,14 @@ class MemoryNetwork(SpikingNetworkModule):
         wacc = Vt * tm / encoder.Tmax
 
         # Create Neurons
-        input = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, neuron_id='input')
-        first = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, neuron_id='first')
-        last = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, neuron_id='last')
-        acc = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, neuron_id='acc')
-        acc2 = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, neuron_id='acc2')
-        recall = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, neuron_id='recall')
-        ready = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, neuron_id='ready')
-        output = ExplicitNeuron(Vt=Vt, tm=tm, tf=tf, neuron_id='output')
+        input = self.add_neuron(Vt=Vt, tm=tm, tf=tf, neuron_name='input')
+        first = self.add_neuron(Vt=Vt, tm=tm, tf=tf, neuron_name='first')
+        last = self.add_neuron(Vt=Vt, tm=tm, tf=tf, neuron_name='last')
+        acc = self.add_neuron(Vt=Vt, tm=tm, tf=tf, neuron_name='acc')
+        acc2 = self.add_neuron(Vt=Vt, tm=tm, tf=tf, neuron_name='acc2')
+        recall = self.add_neuron(Vt=Vt, tm=tm, tf=tf, neuron_name='recall')
+        ready = self.add_neuron(Vt=Vt, tm=tm, tf=tf, neuron_name='ready')
+        output = self.add_neuron(Vt=Vt, tm=tm, tf=tf, neuron_name='output')
 
         # Connections from input
         self.connect_neurons(input, first, 'V', we, Tsyn)
@@ -52,9 +52,6 @@ class MemoryNetwork(SpikingNetworkModule):
 
         # Ready → acc2
         self.connect_neurons(ready, acc2, 'V', we, Tsyn)
-
-        # Register neurons
-        self.add_neurons([input, first, last, acc, acc2, recall, ready, output])
 
         # External references
         self.input = input
