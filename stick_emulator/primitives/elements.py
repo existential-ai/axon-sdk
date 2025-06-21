@@ -1,6 +1,7 @@
 from .helpers import flatten_nested_list
-
 from typing import Optional
+
+import numpy as np
 
 
 class AbstractNeuron:
@@ -108,11 +109,43 @@ class ExplicitNeuron(AbstractNeuron):
         self.spike_times: list[float] = []
         self.out_synapses: list[Synapse] = []
 
+        self._last_synapse_time: float = 0
+        self.log_V = [(self.V, 0)]
+        self.log_ge = [(self.ge, 0)]
+        self.log_gf = [(self.ge, 0)]
+
     def reset(self):
         self.V = self.Vreset
         self.ge = 0
         self.gf = 0
         self.gate = 0
+
+    def _fast_forward(self, interval: float) -> tuple[float, float]:
+        decay = np.exp(-interval / self.tf)
+        new_V = self.V + (self.ge / self.tm) * interval
+        new_gf = self.gf * decay
+        if self.gate != 0:
+            new_V += (self.gf * self.tf / self.tm) * (1 - decay)
+
+        return new_V, new_gf
+
+    def receive_synaptic_event_pred(self, synapse_type, weight, t0) -> None:
+        if t0 != self._last_synapse_time:
+            self.V, self.gf = self._fast_forward(t0 - self._last_synapse_time)
+            self.log_V.append((self.V, t0))
+            self.log_ge.append((self.ge, t0))
+            self._last_synapse_time = t0
+
+        if synapse_type == "V":
+            self.V += weight
+        elif synapse_type == "ge":
+            self.ge += weight
+        elif synapse_type == "gf":
+            self.gf += weight
+        elif synapse_type == "gate":
+            self.gate += weight
+        else:
+            raise ValueError("Unknown synapse type")
 
 
 class Synapse:
