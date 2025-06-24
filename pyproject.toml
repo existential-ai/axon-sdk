@@ -1,24 +1,36 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "stick-emulator"
+name = "axon-sdk"
 version = "0.0.1"
-description = "Spike Timing Interval Computation Kernel Simulation Environment"
+description = "Axon SDK: Spike Timing Interval Computation Kernel Simulation Environment"
 readme = "README.md"
-requires-python = ">=3.9"
-license = { text = "Apache-2.0" }
+requires-python = ">=3.11"
+license = { text = "AGPL-3.0-or-later" }
+
 authors = [
     { name = "Dmitri Lyalikov", email = "dmitri@existential-ai.com" },
     { name = "Francesco Sheiban", email = "fs@existential-ai.com" },
-    { name = "Inigo Lara", email = "inigo@existential-ai.com" },
+    { name = "Inigo Lara", email = "inigo@existential-ai.com" }
 ]
-dependencies = ["numpy", "matplotlib"]
-[project.optional-dependencies]
-test = ["pre-commit", "pytest-cov", "ruff", "optax", "mypy"]
 
+dependencies = [
+    "numpy",
+    "matplotlib"
+]
+
+[project.optional-dependencies]
+test = [
+    "pre-commit",
+    "pytest-cov",
+    "ruff",
+    "optax",
+    "mypy"
+]
 
 [tool.setuptools.packages.find]
-where = ["."]                 # List of folders to search for packages
-include = ["stick_emulator*"] # Pattern to include
+where = ["."]
+include = ["axon_sdk*"]
+

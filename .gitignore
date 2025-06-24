@@ -2,3 +2,33 @@ __pycache__/
 .DS_Store
 .python-version
 stick_emulator.egg-info/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# PyCharm/IDEA
+.idea/
+
+# Test output
+.pytest_cache/
+.coverage
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# VSCode
+.vscode/
+
+# Logs
+*.log
+
+# Jupyter/IPython
+.ipynb_checkpoints/

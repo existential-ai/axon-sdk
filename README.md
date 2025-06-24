@@ -1,10 +1,20 @@
-# STICK emulator
+# Axon-SDK
 
-Python package to emulate the networks implemented in [STICK](https://arxiv.org/abs/1507.06222) (Spike Time Interval Computation Kernel)
+**Axon SDK** is a python simulation toolkit for buildng and executing spiking neural networks based on the [STICK model](https://arxiv.org/abs/1507.06222) (Spike Time Interval Computation Kernel).
+It provides a modular, event-driven framework for developing symbolic, time-coded spiking algorithms for control, computation and embedded neuromorphic applications. 
+
+>  Inspired by the precision of biological time-based encoding.  
+>  Built for simulation, extension, and deployment.
+
+## Features
+-  **Composable network primitives** (neurons, synapses, event queues)
+-  **Accurate timing-based simulation** of spike-interval coding
+-  **Structured APIs** for network composition and module extension
+-  **Interactive visualization** of spike chronograms and topologies
 
 ## Installation
 ```
-cd stick-emulator
+cd axon-sdk
 pip install -e .
 pip install -r requirements.txt
 ```
