@@ -12,6 +12,7 @@
   - [Network Composition](core-concepts/network-composition.md)
 
 - [Software Architecture](architecture/primitives.md)
+  - [Spiking Network Modules](architecture/networks.md)
   - [Simulator Engine](architecture/simulator.md)
   - [Encoder & Decoder](architecture/encoding.md)
   - [Visualization Tools](architecture/visualization.md)
