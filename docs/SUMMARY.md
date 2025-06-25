@@ -14,7 +14,6 @@
 - [Software Architecture](architecture/primitives.md)
   - [Simulator Engine](architecture/simulator.md)
   - [Encoder & Decoder](architecture/encoding.md)
-  - [Event Queue System](architecture/event-queue.md)
   - [Visualization Tools](architecture/visualization.md)
 
 - [Use Cases and Applications](examples/fir-filter.md)

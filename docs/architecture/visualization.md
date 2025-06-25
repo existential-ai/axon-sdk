@@ -39,3 +39,14 @@ sim.plot_chronogram()
 
 Here is the resulting chronogram plot:
 ![Chronogram Example](../figs/vis-plot.png)
+
+## Example Workflow 
+```python
+from axon_sdk.visualization import vis_topology, plot_chronogram
+
+# Visualize network architecture
+vis_topology(my_stick_network)
+
+# After simulating
+sim.plot_chronogram()
+```
