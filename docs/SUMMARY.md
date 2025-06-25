@@ -19,7 +19,7 @@
 
 - [Use Cases and Applications](examples/fir-filter.md)
 
-- [Deployment](deployment/ada.md)
+- [Deployment](deployment/compilation.md)
   - [Exporting Spike Traces](deployment/spike-export.md)
   - [Profiling and Debugging](deployment/profiling.md)
 
